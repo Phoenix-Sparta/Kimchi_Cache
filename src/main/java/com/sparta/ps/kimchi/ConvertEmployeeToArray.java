@@ -1,6 +1,7 @@
 package com.sparta.ps.kimchi;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class ConvertEmployeeToArray {
             String[] parts = employeeRecord.split(","); // Assuming CSV fields are separated by comma
             Employee employee = new Employee(
                     Integer.parseInt(parts[0]),                  // empID
-                    parts[1].charAt(0),                          // prefix
+                    parts[1],                                    // prefix
                     parts[2],                                    // firstName
                     parts[3].charAt(0),                          // middleInitial
                     parts[4],                                    // lastName
@@ -26,7 +27,8 @@ public class ConvertEmployeeToArray {
                     parts[6],                                    // email
                     LocalDate.parse(parts[7], formatter),        // dateOfBirth
                     LocalDate.parse(parts[8], formatter),        // dateOfJoin
-                    Integer.parseInt(parts[9])                   // salary
+                    Integer.parseInt(parts[9]),                  // salary
+                    Period.between(LocalDate.parse(parts[7], formatter), LocalDate.now()).getYears() // Age
             );
             employees.add(employee);
         }
