@@ -2,22 +2,37 @@ package com.sparta.ps.kimchi;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class EmployeeDAO {
 
     private ArrayList<Employee> employees;
+    private Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
     public EmployeeDAO(ArrayList<Employee> employees){
         this.employees = employees;
+
+        for(Employee employee : employees){
+            employeeID.put(employee.empID(), employee);
+        }
+    }
+
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+        employeeID.put(employee.empID(), employee);
+    }
+
+    public void deleteEmployee(Employee employee){
+        employees.remove(employee);
+        employeeID.remove(employee.empID());
     }
 
     public Employee getEmployeeByID(int id){
-        for(Employee employee : employees){
-            if(employee.empID() == id){
-                return employee;
-            }
+        if(employeeID.contains(id)){
+            return employeeID.get(id);
+        }else{
+            return null;
         }
-        return null;
     }
 
     public ArrayList<Employee> getEmployeeByLastNamePartial(String lastName){
