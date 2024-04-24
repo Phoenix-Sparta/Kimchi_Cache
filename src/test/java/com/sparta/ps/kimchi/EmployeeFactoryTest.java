@@ -24,9 +24,9 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that employee ID returns correct result")
     void testThatEmployeeIdReturnsCorrectResult() {
         // Arrange
-        Employee employee = new Employee(123, 'm', "Patrick", 'M',
+        Employee employee = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-                LocalDate.of(2024, 4, 8), 100000);
+                LocalDate.of(2024, 4, 8), 100000, 24);
         EmployeeDAO employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
 
         // Act
@@ -42,9 +42,9 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that the employee last name works")
     void testThatTheEmployeeLastNameWorks() {
         // Arrange
-        Employee employee = new Employee(123, 'm', "Patrick", 'M',
+        Employee employee = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-                LocalDate.of(2024, 4, 8), 100000);
+                LocalDate.of(2024, 4, 8), 100000, 24);
         EmployeeDAO employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
         // Act
         List<Employee> retrievedEmployee = employeeDAO.getEmployeeByLastNamePartial("Ward");
