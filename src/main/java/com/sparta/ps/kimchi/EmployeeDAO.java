@@ -22,6 +22,11 @@ public class EmployeeDAO {
         employeeID.put(employee.empID(), employee);
     }
 
+    public void deleteEmployee(Employee employee){
+        employees.remove(employee);
+        employeeID.remove(employee.empID());
+    }
+
     public Employee getEmployeeByID(int id){
         if(employeeID.contains(id)){
             return employeeID.get(id);
