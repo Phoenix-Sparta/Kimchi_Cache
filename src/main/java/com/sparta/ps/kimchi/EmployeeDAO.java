@@ -2,15 +2,18 @@ package com.sparta.ps.kimchi;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 
 public class EmployeeDAO {
 
     private ArrayList<Employee> employees;
+    private ArrayList<Employee> employeesByAge;
     private Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
     public EmployeeDAO(ArrayList<Employee> employees){
         this.employees = employees;
+        this.employeesByAge = employees;
 
         for(Employee employee : employees){
             employeeID.put(employee.empID(), employee);
