@@ -17,6 +17,11 @@ public class EmployeeDAO {
         }
     }
 
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+        employeeID.put(employee.empID(), employee);
+    }
+
     public Employee getEmployeeByID(int id){
         if(employeeID.contains(id)){
             return employeeID.get(id);
