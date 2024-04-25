@@ -32,6 +32,7 @@ public class EmployeeDAO implements DAOEnabler {
     /**
      * Returns an ArrayList of all employee  whose last name contains the last name given
      * Only works if the lastName given is part of the Employee's last name, doesn't account
+     * It is not case-sensitive
      * for spelling mistakes.
      * @param lastName The last name to partial match with
      * @return ArrayList of Employee object whose last name contains lastName
@@ -40,7 +41,7 @@ public class EmployeeDAO implements DAOEnabler {
         LOGGER.info("Finding employee with last name that contains " + lastName);
         ArrayList<Employee> matches = new ArrayList<>();
         for(Employee employee : getEmployees()){
-            if(employee.lastName().contains(lastName)){
+            if(employee.lastName().toLowerCase().contains(lastName.toLowerCase())){
                 LOGGER.fine("Match found");
                 matches.add(employee);
             }

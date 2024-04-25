@@ -29,7 +29,7 @@ public class App {
         ArrayList<Employee> employees = convertEmployeesToArray(500);
         EmployeeDAO employeeDAO = new EmployeeDAO(employees);
 
-        employeeDAO.getEmployeeByGender('M');
+        employeeDAO.getEmployeeByLastNamePartial("Sands");
 
     }
 }
