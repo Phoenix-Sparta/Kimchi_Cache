@@ -13,6 +13,7 @@ public class EmployeeFactoryTest {
     private static Employee employee;
     private static Employee employee1;
     private static ArrayList<Employee> employees;
+    private static EmployeeDAO employeeAPIs;
 
     @BeforeAll
     public static void beforeTests() throws IOException {
@@ -30,7 +31,7 @@ public class EmployeeFactoryTest {
         employees.add(employee);
         employees.add(employee1);
 
-        employeeAPIs = new EmployeeAPIs(employees);
+        employeeDAO = new EmployeeDAO(employees);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        ArrayList<Employee> retrievedEmployee = employeeAPIs.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
+        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
         // Assert
         Assertions.assertEquals(2, retrievedEmployee.size(), "Number of retrieved employees should match the expected number of employees");
         Assertions.assertEquals(retrievedEmployee, employees,  "Retrieved employees should match the expected employees");
@@ -88,7 +89,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that no employees are returned if the start age is greater than the end age")
     void testStartAgeGreaterThanEndAge() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinAgeRange(35, 25);
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinAgeRange(35, 25);
 
         // Assert
         Assertions.assertTrue(retrievedEmployees.isEmpty());
@@ -99,7 +100,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that no employees are returned if there are no employees within the salary range")
     void testNoEmployeesWithinSalaryRange() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(110000, 120000);
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinSalaryRange(110000, 120000);
 
         // Assert
         Assertions.assertTrue(retrievedEmployees.isEmpty());
@@ -109,7 +110,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that no employees are returned if the start salary is greater than the end salary")
     void testStartSalaryGreaterThanEndSalary() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(200000, 90000);
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinSalaryRange(200000, 90000);
 
         // Assert
         Assertions.assertTrue(retrievedEmployees.isEmpty());
@@ -119,7 +120,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that the correct employee is returned when given a valid salary range")
     void testSalaryRangeGivesCorrectEmployee() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(50000, 200000);
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinSalaryRange(50000, 200000);
 
         // Assert
         Assertions.assertEquals(2, retrievedEmployees.size());
@@ -130,7 +131,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that employees with the specified gender are returned")
     void testEmployeesWithSpecifiedGender() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeeByGender('M');
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeeByGender('M');
 
         // Assert
         Assertions.assertTrue(retrievedEmployees.contains(employee));
@@ -140,7 +141,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that employees with the incorrect gender are not returned")
     void testEmployeesWithIncorrectGender() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeeByGender('F');
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeeByGender('F');
 
         // Assert
         Assertions.assertFalse(retrievedEmployees.contains(employee));
