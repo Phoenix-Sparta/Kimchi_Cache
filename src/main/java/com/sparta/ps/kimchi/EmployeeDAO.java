@@ -1,89 +1,148 @@
 package com.sparta.ps.kimchi;
+
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Logger;
 
-public class EmployeeDAO {
+import static com.sparta.ps.kimchi.EmployeeDAO.*;
+import static com.sparta.ps.kimchi.EmployeeParser.parseEmployeeRecord;
 
-    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
-    private static ArrayList<Employee> employees;
-    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+public class EmployeeAPIs {
 
-    private static ArrayList<Employee> employeesByAge;
-    private static ArrayList<Employee> employeesByJoinDate;
-    private static ArrayList<Employee> employeesBySalary;
+    static final Logger LOGGER = Logger.getLogger(EmployeeAPIs.class.getName());
 
+    public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
+        employeeDAOSetUp(employees);
+        EmployeeLogger.configureLogger(LOGGER);
+    }
 
-    private static int numOfEmployees;
+    public void addEmployee(String employee){
+        createEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+    }
 
-    private EmployeeDAO() throws IOException {}
+    public void addEmployee(Employee employee){
+        createEmployee(employee);
+    }
 
-    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
-        employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
-        numOfEmployees = employees.size();
-
-        employeesByAge.sort(Comparator.comparingInt(Employee::age));
-        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
-        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
-
+    public void addEmployee(ArrayList<Employee> employees){
         for(Employee employee : employees){
-            employeeID.put(employee.empID(), employee);
+            createEmployee(employee);
         }
     }
 
-    public static ArrayList<Employee> getEmployees() {
-        return employees;
+    public void removeEmployee(String employee){
+        deleteEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
     }
 
-    public static ArrayList<Employee> getEmployeesByAge() {
-        return employeesByAge;
+    public void removeEmployee(Employee employee){
+        deleteEmployee(employee);
     }
 
-    public static ArrayList<Employee> getEmployeesByJoinDate() {
-        return employeesByJoinDate;
+    public void removeEmployee(ArrayList<Employee> employees){
+        for(Employee employee : employees){
+            deleteEmployee(employee);
+        }
     }
 
-    public static ArrayList<Employee> getEmployeesBySalary() {
-        return employeesBySalary;
+
+    public Employee getEmployeeByID(int id){
+        return getEmployeeID().getOrDefault(id, null);
     }
 
-    public static Hashtable<Integer, Employee> getEmployeeID() {
-        return employeeID;
+    public ArrayList<Employee> getEmployeeByLastNamePartial(String lastName){
+        ArrayList<Employee> matches = new ArrayList<>();
+        for(Employee employee : getEmployees()){
+            if(employee.lastName().contains(lastName)){
+                matches.add(employee);
+            }
+        }
+        LOGGER.info("Employees found by last name partial '" + lastName + "': " + matches);
+        return matches;
     }
 
-    public static int getNumOfEmployees() {
-        return numOfEmployees;
+    public ArrayList<Employee> getEmployeesHiredWithinDateRange(LocalDate start, LocalDate end){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start date
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                start, 0, 24);
+
+        int index = getIndex(getEmployeesByJoinDate(),dummyEmployee, Comparator.comparing(Employee::dateOfJoin));
+
+        // If multiple employee have same join date, find first instance of it
+        while(index > 0 &&  getEmployeesByJoinDate().get(index-1).dateOfJoin().isEqual(start)){
+            index--;
+        }
+
+        while(index < getNumOfEmployees() && (getEmployeesByJoinDate().get(index).dateOfJoin().isBefore(end)
+                || getEmployeesByJoinDate().get(index).dateOfJoin().isEqual(end))){
+            matches.add(getEmployeesByJoinDate().get(index));
+            index++;
+        }
+
+        LOGGER.info("Employees hired within date range [" + start + ", " + end + "]: " + matches);
+        return matches;
     }
 
-    public static void createEmployee(Employee employee){
-        employees.add(employee);
-        employeeID.put(employee.empID(), employee);
+    public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start age
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), 0, start);
 
-        employeesByAge.add(employee);
-        employeesByJoinDate.add(employee);
-        employeesBySalary.add(employee);
+        // Use binary search to find a employee with the same age
+        int index = getIndex(getEmployeesByAge(),dummyEmployee, Comparator.comparingInt(Employee::age));
 
-        employeesByAge.sort(Comparator.comparingInt(Employee::age));
-        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
-        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
-        LOGGER.info("Employee added: " + employee);
+        // If multiple employee have same age, find the first instance of it
+        while(index > 0 && getEmployeesByAge().get(index-1).age() >= start){
+            index--;
+        }
+
+        while(index < getNumOfEmployees() && getEmployeesByAge().get(index).age() <= end){
+            matches.add(getEmployeesByAge().get(index));
+            index++;
+        }
+        LOGGER.info("Employees within age range [" + start + ", " + end + "]: " + matches);
+        return matches;
     }
 
-    public static String readEmployee(int id){
-        LOGGER.info("Employee read with ID " + id);
-        return employeeID.get(id).toString();
+    public ArrayList<Employee> getEmployeesWithinSalaryRange(int start, int end){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start salary
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), start, 100);
+
+        int index = getIndex(getEmployeesBySalary(), dummyEmployee, Comparator.comparingInt(Employee::salary));
+
+        while(index > 0 && getEmployeesByAge().get(index - 1).salary() >= start){
+            index--;
+        }
+
+        while(index < getNumOfEmployees() && getEmployeesBySalary().get(index).salary() <= end){
+            matches.add(getEmployeesBySalary().get(index));
+            index++;
+        }
+        return matches;
     }
 
-    public static void deleteEmployee(Employee employee){
-        employees.remove(employee);
-        employeeID.remove(employee.empID());
-        
-        employeesByAge.remove(employee);
-        employeesByJoinDate.remove(employee);
-        employeesBySalary.remove(employee);
-        LOGGER.info("Employee deleted: " + employee);
+    public ArrayList<Employee> getEmployeeByGender(char gender){
+        ArrayList<Employee> matches = new ArrayList<>();
+        for(Employee employee : getEmployees()){
+            if(employee.gender() == gender){
+                matches.add(employee);
+            }
+        }
+        return matches;
     }
 
+    private int getIndex(ArrayList<Employee> employees, Employee dummyEmployee, Comparator<Employee> comparator){
+        int index = Collections.binarySearch(employees, dummyEmployee, comparator);
+        return (index > 0) ? index : -(index + 1);
+    }
 }
