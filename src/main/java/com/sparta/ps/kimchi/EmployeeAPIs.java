@@ -13,7 +13,7 @@ import static com.sparta.ps.kimchi.EmployeeParser.parseEmployeeRecord;
 
 public class EmployeeAPIs {
 
-    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
+    static final Logger LOGGER = Logger.getLogger(EmployeeAPIs.class.getName());
 
     public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
         employeeDAOSetUp(employees);
@@ -88,11 +88,6 @@ public class EmployeeAPIs {
         return matches;
     }
 
-    public static void main(String[] args) throws IOException {
-        ArrayList<Employee> employees = new ArrayList<>();
-        EmployeeAPIs employeeAPIs = new EmployeeAPIs(employees);
-    }
-
     public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start age
@@ -148,6 +143,6 @@ public class EmployeeAPIs {
 
     private int getIndex(ArrayList<Employee> employees, Employee dummyEmployee, Comparator<Employee> comparator){
         int index = Collections.binarySearch(employees, dummyEmployee, comparator);
-        return (index < 0) ? index : -(index + 1);
+        return (index > 0) ? index : -(index + 1);
     }
 }
