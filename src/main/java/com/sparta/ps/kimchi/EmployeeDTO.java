@@ -1,13 +1,11 @@
 package com.sparta.ps.kimchi;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class EmployeeDAO {
+public class EmployeeDTO {
 
-    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
+    static final Logger LOGGER = Logger.getLogger(EmployeeDTO.class.getName());
     private static ArrayList<Employee> employees;
     private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
@@ -18,7 +16,7 @@ public class EmployeeDAO {
 
     private static int numOfEmployees;
 
-    private EmployeeDAO() throws IOException {}
+    private EmployeeDTO() throws IOException {}
 
     public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
         employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
