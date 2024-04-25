@@ -128,7 +128,7 @@ public class EmployeeDAO {
 
         int index = getIndex(employeesBySalary, dummyEmployee, Comparator.comparingInt(Employee::salary));
 
-        while(index > 0 && employeesByAge.get(index - 1).salary() >= start{
+        while(index > 0 && employeesByAge.get(index - 1).salary() >= start){
             index--;
         }
 
