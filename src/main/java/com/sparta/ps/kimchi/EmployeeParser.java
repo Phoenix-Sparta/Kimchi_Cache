@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class EmployeeParser {
 
-    private static final Logger LOGGER = Logger.getLogger(ConvertEmployeeToArray.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EmployeeParser.class.getName());
 
     public static Employee parseEmployeeRecord(String employeeRecord, DateTimeFormatter formatter) {
         String[] parts = employeeRecord.split(",");
