@@ -15,15 +15,15 @@ public class EmployeeDAO {
     private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
     private static int numOfEmployees;
-
     private static EmployeeDAO employeeDAO;
 
-    private EmployeeDAO(ArrayList<Employee> employees) throws IOException{}
+    private EmployeeDAO() throws IOException {
+        EmployeeLogger.configureLogger(LOGGER);
+    }
 
-    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees) throws IOException {
+    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
         employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
         numOfEmployees = employees.size();
-        EmployeeLogger.configureLogger(LOGGER);
 
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
