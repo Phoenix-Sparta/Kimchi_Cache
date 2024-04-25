@@ -88,6 +88,35 @@ public class EmployeeDAO implements DAOEnabler {
         return matches;
     }
 
+    public ArrayList<Employee> getEmployeesHiredDate(LocalDate start){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start date
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                start, 0, 24);
+
+        int index = Collections.binarySearch(getEmployeesByJoinDate(), dummyEmployee, Comparator.comparing(Employee::dateOfJoin));
+        // Index returns less than 0 if no match was found
+        if(index < 0){
+            LOGGER.info("No employees hired at " + start);
+            return null;
+        }
+
+        // If multiple employee have same join date, find first instance of it
+        while(index > 0 &&  getEmployeesByJoinDate().get(index-1).dateOfJoin().isEqual(start)){
+            index--;
+        }
+
+        while(index < getNumOfEmployees() && (getEmployeesByJoinDate().get(index).dateOfJoin().isEqual(start))){
+            matches.add(getEmployeesByJoinDate().get(index));
+            index++;
+        }
+
+        LOGGER.info("Employees hired at date [" + start + "]: " + matches);
+        return matches;
+    }
+
+
     public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start age
@@ -108,6 +137,34 @@ public class EmployeeDAO implements DAOEnabler {
             index++;
         }
         LOGGER.info("Employees within age range [" + start + ", " + end + "]: " + matches);
+        return matches;
+    }
+
+    public ArrayList<Employee> getEmployeesWithAge(int start){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start age
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), 0, start);
+
+        // Use binary search to find a employee with the same age
+        int index = Collections.binarySearch(getEmployeesByAge(), dummyEmployee, Comparator.comparingInt(Employee::age));
+
+        if(index < 0){
+            LOGGER.info("No employees with age " + start);
+            return null;
+        }
+
+        // If multiple employee have same age, find the first instance of it
+        while(index > 0 && getEmployeesByAge().get(index-1).age() >= start){
+            index--;
+        }
+
+        while(index < getNumOfEmployees() && getEmployeesByAge().get(index).age() == start){
+            matches.add(getEmployeesByAge().get(index));
+            index++;
+        }
+        LOGGER.info("Employees with age [" + start + "]: " + matches);
         return matches;
     }
 
