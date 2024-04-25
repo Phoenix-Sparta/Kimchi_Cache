@@ -1,15 +1,19 @@
 package com.sparta.ps.kimchi;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class EmployeeDAO {
 
+    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
     private ArrayList<Employee> employees;
     private ArrayList<Employee> employeesByAge;
     private Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
-    public EmployeeDAO(ArrayList<Employee> employees){
+    public EmployeeDAO(ArrayList<Employee> employees) throws IOException {
+        EmployeeLogger.configureLogger(LOGGER);
         this.employees = employees;
 
         this.employeesByAge = employees;
@@ -23,9 +27,11 @@ public class EmployeeDAO {
     public void addEmployee(Employee employee){
         employees.add(employee);
         employeeID.put(employee.empID(), employee);
+        LOGGER.info("Employee added: " + employee);
     }
 
     public String readEmployee(int id){
+        LOGGER.info("Employee read with ID " + id);
         return employeeID.get(id).toString();
     }
 
@@ -36,6 +42,7 @@ public class EmployeeDAO {
     public void deleteEmployee(Employee employee){
         employees.remove(employee);
         employeeID.remove(employee.empID());
+        LOGGER.info("Employee deleted: " + employee);
     }
 
     public Employee getEmployeeByID(int id){
@@ -49,6 +56,7 @@ public class EmployeeDAO {
                 matches.add(employee);
             }
         }
+        LOGGER.info("Employees found by last name partial '" + lastName + "': " + matches);
         return matches;
     }
 
@@ -59,6 +67,7 @@ public class EmployeeDAO {
                 matches.add(employee);
             }
         }
+        LOGGER.info("Employees hired within date range [" + start + ", " + end + "]: " + matches);
         return matches;
     }
 
@@ -83,6 +92,7 @@ public class EmployeeDAO {
             matches.add(employeesByAge.get(index));
             index++;
         }
+        LOGGER.info("Employees within age range [" + start + ", " + end + "]: " + matches);
         return matches;
     }
 
