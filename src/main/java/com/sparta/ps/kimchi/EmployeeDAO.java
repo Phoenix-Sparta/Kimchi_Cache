@@ -15,7 +15,6 @@ public class EmployeeDAO {
     private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
     private static int numOfEmployees;
-    private static EmployeeDAO employeeDAO;
 
     private EmployeeDAO() throws IOException {
         EmployeeLogger.configureLogger(LOGGER);
@@ -32,10 +31,6 @@ public class EmployeeDAO {
         for(Employee employee : employees){
             employeeID.put(employee.empID(), employee);
         }
-    }
-
-    public static EmployeeDAO getEmployeeDAO(){
-        return employeeDAO;
     }
 
     public static ArrayList<Employee> getEmployees() {
