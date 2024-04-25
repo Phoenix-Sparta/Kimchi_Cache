@@ -1,0 +1,87 @@
+package com.sparta.ps.kimchi;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
+
+public class EmployeeDTO {
+
+    static final Logger LOGGER = Logger.getLogger(EmployeeDTO.class.getName());
+    private static ArrayList<Employee> employees;
+    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+
+    private static ArrayList<Employee> employeesByAge;
+    private static ArrayList<Employee> employeesByJoinDate;
+    private static ArrayList<Employee> employeesBySalary;
+
+
+    private static int numOfEmployees;
+
+    private EmployeeDTO() throws IOException {}
+
+    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
+        employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
+        numOfEmployees = employees.size();
+
+        employeesByAge.sort(Comparator.comparingInt(Employee::age));
+        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
+        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
+
+        for(Employee employee : employees){
+            employeeID.put(employee.empID(), employee);
+        }
+    }
+
+    public static ArrayList<Employee> getEmployees() {
+        return employees;
+    }
+
+    public static ArrayList<Employee> getEmployeesByAge() {
+        return employeesByAge;
+    }
+
+    public static ArrayList<Employee> getEmployeesByJoinDate() {
+        return employeesByJoinDate;
+    }
+
+    public static ArrayList<Employee> getEmployeesBySalary() {
+        return employeesBySalary;
+    }
+
+    public static Hashtable<Integer, Employee> getEmployeeID() {
+        return employeeID;
+    }
+
+    public static int getNumOfEmployees() {
+        return numOfEmployees;
+    }
+
+    public static void createEmployee(Employee employee){
+        employees.add(employee);
+        employeeID.put(employee.empID(), employee);
+
+        employeesByAge.add(employee);
+        employeesByJoinDate.add(employee);
+        employeesBySalary.add(employee);
+
+        employeesByAge.sort(Comparator.comparingInt(Employee::age));
+        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
+        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
+        LOGGER.info("Employee added: " + employee);
+    }
+
+    public static String readEmployee(int id){
+        LOGGER.info("Employee read with ID " + id);
+        return employeeID.get(id).toString();
+    }
+
+    public static void deleteEmployee(Employee employee){
+        employees.remove(employee);
+        employeeID.remove(employee.empID());
+        
+        employeesByAge.remove(employee);
+        employeesByJoinDate.remove(employee);
+        employeesBySalary.remove(employee);
+        LOGGER.info("Employee deleted: " + employee);
+    }
+
+}

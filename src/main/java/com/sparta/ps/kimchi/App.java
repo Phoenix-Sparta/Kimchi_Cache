@@ -8,8 +8,8 @@ import static com.sparta.ps.kimchi.ConvertEmployeeToArray.convertEmployeesToArra
 public class App {
     public static void main(String[] args) throws IOException {
         ArrayList<Employee> employees = convertEmployeesToArray(500);
-        EmployeeAPIs employeeAPIs = new EmployeeAPIs(employees);
-        employeeAPIs.getEmployeeByID(1234);
+        EmployeeDAO employeeDAO = new EmployeeDAO(employees);
+        employeeDAO.getEmployeeByID(1234);
 
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class EmployeeFactoryTest {
-    private static EmployeeAPIs employeeAPIs;
+    private static EmployeeDAO employeeDAO;
     private static Employee employee;
     private static Employee employee1;
     private static ArrayList<Employee> employees;
@@ -19,6 +19,7 @@ public class EmployeeFactoryTest {
         employee = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'M', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 24);
+      
         employee1 = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'M', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 30);
@@ -37,7 +38,7 @@ public class EmployeeFactoryTest {
     void testThatEmployeeIdReturnsCorrectResult() {
         // Arrange
         // Act
-        Employee retrievedEmployee = employeeAPIs.getEmployeeByID(123);
+        Employee retrievedEmployee = employeeDAO.getEmployeeByID(123);
 
         // Assert
         Assertions.assertEquals(employee.empID(), retrievedEmployee.empID(), "Retrieved employee should match the original employee");
@@ -51,8 +52,8 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        List<Employee> retrievedEmployee = employeeAPIs.getEmployeeByLastNamePartial("Ward");
-        List<Employee> retrievedEmployee2 = employeeAPIs.getEmployeeByLastNamePartial("ard");
+        List<Employee> retrievedEmployee = employeeDAO.getEmployeeByLastNamePartial("Ward");
+        List<Employee> retrievedEmployee2 = employeeDAO.getEmployeeByLastNamePartial("ard");
         // Assert
         Assertions.assertEquals(employee.lastName(), retrievedEmployee.get(0).lastName(), "Retried employee should match original employee");
         Assertions.assertEquals(employee.lastName(), retrievedEmployee2.get(0).lastName(), "Retried employee should match original employee");
@@ -77,7 +78,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that no employees are returned if there are no employees within the age range")
     void testNoEmployeesWithinAgeRange() {
         // Act
-        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinAgeRange(40, 50);
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinAgeRange(40, 50);
 
         // Assert
         Assertions.assertTrue(retrievedEmployees.isEmpty());
