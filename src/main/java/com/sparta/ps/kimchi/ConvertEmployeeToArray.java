@@ -11,14 +11,6 @@ public class ConvertEmployeeToArray {
 
     private static final Logger LOGGER = Logger.getLogger(ConvertEmployeeToArray.class.getName());
 
-    static {
-        try {
-            EmployeeLogger.configureLogger(LOGGER);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately
-        }
-    }
-
     public static ArrayList<Employee> convertEmployeesToArray(int i) {
         String[] employeeRecords = EmployeeFactory.getEmployees(i);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
