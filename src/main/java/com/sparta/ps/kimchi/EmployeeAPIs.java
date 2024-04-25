@@ -2,20 +2,50 @@ package com.sparta.ps.kimchi;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
 import static com.sparta.ps.kimchi.EmployeeDAO.*;
+import static com.sparta.ps.kimchi.EmployeeParser.parseEmployeeRecord;
 
 public class EmployeeAPIs {
-    private static EmployeeDAO employeeDAO;
+
     static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
 
     public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
         employeeDAOSetUp(employees);
         EmployeeLogger.configureLogger(LOGGER);
+    }
+
+    public void addEmployee(String employee){
+        createEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+    }
+
+    public void addEmployee(Employee employee){
+        createEmployee(employee);
+    }
+
+    public void addEmployee(ArrayList<Employee> employees){
+        for(Employee employee : employees){
+            createEmployee(employee);
+        }
+    }
+
+    public void removeEmployee(String employee){
+        deleteEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+    }
+
+    public void removeEmployee(Employee employee){
+        deleteEmployee(employee);
+    }
+
+    public void removeEmployee(ArrayList<Employee> employees){
+        for(Employee employee : employees){
+            deleteEmployee(employee);
+        }
     }
 
 
