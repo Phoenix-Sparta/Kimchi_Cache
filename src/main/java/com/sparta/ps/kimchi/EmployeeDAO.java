@@ -8,14 +8,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
-import static com.sparta.ps.kimchi.EmployeeDAO.*;
+import static com.sparta.ps.kimchi.EmployeeDTO.*;
 import static com.sparta.ps.kimchi.EmployeeParser.parseEmployeeRecord;
 
-public class EmployeeAPIs {
+public class EmployeeDAO implements DAOEnabler {
 
-    static final Logger LOGGER = Logger.getLogger(EmployeeAPIs.class.getName());
+    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
 
-    public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
+    public EmployeeDAO(ArrayList<Employee> employees) throws IOException {
         employeeDAOSetUp(employees);
         EmployeeLogger.configureLogger(LOGGER);
     }
