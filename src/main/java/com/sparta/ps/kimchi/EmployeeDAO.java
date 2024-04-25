@@ -8,19 +8,18 @@ public class EmployeeDAO {
     private ArrayList<Employee> employees;
     private ArrayList<Employee> employeesByAge;
     private ArrayList<Employee> employeesByJoinDate;
+    private ArrayList<Employee> employeesBySalary;
     private Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
     private static int numOfEmployees;
 
     public EmployeeDAO(ArrayList<Employee> employees){
-        this.employees = employees;
+        this.employees = this.employeesByAge = this.employeesByJoinDate = this.employeesBySalary = employees;
         numOfEmployees = employees.size();
 
-        this.employeesByAge = employees;
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
-
-        this.employeesByJoinDate = employees;
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
+        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
 
         for(Employee employee : employees){
             employeeID.put(employee.empID(), employee);
@@ -30,6 +29,12 @@ public class EmployeeDAO {
     public void addEmployee(Employee employee){
         employees.add(employee);
         employeeID.put(employee.empID(), employee);
+
+        employeesByAge.add(employee);
+        employeesByJoinDate.add(employee);
+
+        employeesByAge.sort(Comparator.comparingInt(Employee::age));
+        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
     }
 
     public String readEmployee(int id){
@@ -61,6 +66,7 @@ public class EmployeeDAO {
 
     public ArrayList<Employee> getEmployeesHiredWithinDateRange(LocalDate start, LocalDate end){
         ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start date
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
                 "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
                 start, 0, 24);
@@ -83,16 +89,12 @@ public class EmployeeDAO {
 
     public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){
         ArrayList<Employee> matches = new ArrayList<>();
-        // Create dummy employee with required age
+        // Create dummy employee with start age
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
                 "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 0, start);
-        // Use binary search to find a employee with the same age, otherwise negate and + 1 index to get the first age
-        // that is at least start
-//        int index = Collections.binarySearch(employeesByAge, employee, Comparator.comparingInt(Employee::age));
-//        if (index < 0){
-//            index = -(index + 1);
-//        }
+
+        // Use binary search to find a employee with the same age
         int index = getIndex(employeesByAge,dummyEmployee, Comparator.comparingInt(Employee::age));
 
         // If multiple employee have same age, find the first instance of it
@@ -104,6 +106,37 @@ public class EmployeeDAO {
             matches.add(employeesByAge.get(index));
             index++;
         }
+        return matches;
+    }
+
+    public ArrayList<Employee> getEmployeesWithinSalaryRange(int start, int end){
+        ArrayList<Employee> matches = new ArrayList<>();
+        // Create dummy employee with start salary
+        Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
+                "Bar", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), start, 100);
+
+        int index = getIndex(employeesBySalary, dummyEmployee, Comparator.comparingInt(Employee::salary));
+
+        while(index > 0 && employeesByAge.get(index - 1).salary() >= start{
+            index--;
+        }
+
+        while(index < numOfEmployees && employeesBySalary.get(index).salary() <= end){
+            matches.add(employeesBySalary.get(index));
+            index++;
+        }
+        return matches;
+    }
+
+    public ArrayList<Employee> getEmployeeByGender(char gender){
+        ArrayList<Employee> matches = new ArrayList<>();
+        for(Employee employee : employees){
+            if(employee.gender() == gender){
+                matches.add(employee);
+            }
+        }
+
         return matches;
     }
 
