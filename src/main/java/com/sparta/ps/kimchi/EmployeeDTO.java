@@ -19,18 +19,16 @@ public class EmployeeDTO {
     private EmployeeDTO() throws IOException {}
 
     public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
+        // Deep copy each ArrayList
         for(Employee employee : newEmployees){
             employees.add(employee);
             employeesByAge.add(employee);
             employeesByJoinDate.add(employee);
             employeesBySalary.add(employee);
         }
+
         numOfEmployees = employees.size();
-
-        //employeesByAge.sort((o1,o2) -> o1.age().equal(o2.age()));
-
-        //employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
-
+        // Sort all ArrayLists based on their own comparator
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
         employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
