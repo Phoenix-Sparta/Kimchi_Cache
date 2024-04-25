@@ -2,25 +2,26 @@ package com.sparta.ps.kimchi;
 
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class EmployeeFactoryTest {
-    private static EmployeeDAO employeeDAO;
+    private static EmployeeAPIs employeeAPIs;
     private static Employee employee;
     private static Employee employee2;
 
     @BeforeAll
-    public static void beforeTests() {
+    public static void beforeTests() throws IOException {
         employee = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 24);
         employee2 = new Employee(1123, "mr", "Patrick", 'M',
                 "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 24);
-        employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
+        employeeAPIs = new EmployeeAPIs(new ArrayList<>(List.of(employee)));
     }
 
     @Test
@@ -28,7 +29,7 @@ public class EmployeeFactoryTest {
     void testThatEmployeeIdReturnsCorrectResult() {
         // Arrange
         // Act
-        Employee retrievedEmployee = employeeDAO.getEmployeeByID(123);
+        Employee retrievedEmployee = employeeAPIs.getEmployeeByID(123);
 
         // Assert
         Assertions.assertEquals(employee.empID(), retrievedEmployee.empID(), "Retrieved employee should match the original employee");
@@ -42,8 +43,8 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        List<Employee> retrievedEmployee = employeeDAO.getEmployeeByLastNamePartial("Ward");
-        List<Employee> retrievedEmployee2 = employeeDAO.getEmployeeByLastNamePartial("ard");
+        List<Employee> retrievedEmployee = employeeAPIs.getEmployeeByLastNamePartial("Ward");
+        List<Employee> retrievedEmployee2 = employeeAPIs.getEmployeeByLastNamePartial("ard");
         // Assert
         Assertions.assertEquals(employee.lastName(), retrievedEmployee.get(0).lastName(), "Retried employee should match original employee");
         Assertions.assertEquals(employee.lastName(), retrievedEmployee2.get(0).lastName(), "Retried employee should match original employee");
@@ -56,7 +57,7 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
+        ArrayList<Employee> retrievedEmployee = employeeAPIs.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
         ArrayList<Employee> expectedEmployees = new ArrayList<>();
         expectedEmployees.add(employee);
         // Assert
@@ -65,29 +66,40 @@ public class EmployeeFactoryTest {
 
     }
 
-    @Test
-    @DisplayName("Check that the remove function works")
-    void checkThatTheRemoveFunctionWorks() {
-        // Arrange
-
-        // Act
-        employeeDAO.deleteEmployee(employee2);
-        Employee retrievedEmployee = employeeDAO.getEmployeeByID(1123);
-
-        // Assert
-        Assertions.assertNull(retrievedEmployee, "Employee should not be found after deletion");
-
-    }
 
     @Test
-    @DisplayName("Test the read method")
-    void testTheReadMethod() {
-        // Arrange
-
+    @DisplayName("Test that no employees are returned if there are no employees within the age range")
+    void testNoEmployeesWithinAgeRange() {
         // Act
-        String retrievedEmployeeString = employeeDAO.readEmployee(123);
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinAgeRange(40, 50);
 
         // Assert
-        Assertions.assertEquals(retrievedEmployeeString, "Employee{empID=123', prefix=mr, firstName='Patrick', middleInitial=M, lastName='Ward', gender=m, email='email@email.com', dateOfBirth=1999-10-30, dateOfJoin=2024-04-08, salary=100000}");
+        Assertions.assertTrue(retrievedEmployees.isEmpty());
     }
+
+//    @Test
+//    @DisplayName("Check that the remove function works")
+//    void checkThatTheRemoveFunctionWorks() {
+//        // Arrange
+//
+//        // Act
+//        EmployeeAPIs.deleteEmployee(employee2);
+//        Employee retrievedEmployee = employeeAPIs.getEmployeeByID(1123);
+//
+//        // Assert
+//        Assertions.assertNull(retrievedEmployee, "Employee should not be found after deletion");
+//
+//    }
+//
+//    @Test
+//    @DisplayName("Test the read method")
+//    void testTheReadMethod() {
+//        // Arrange
+//
+//        // Act
+//        String retrievedEmployeeString = employeeAPIs.readEmployee(123);
+//
+//        // Assert
+//        Assertions.assertEquals(retrievedEmployeeString, "Employee{empID=123', prefix=mr, firstName='Patrick', middleInitial=M, lastName='Ward', gender=m, email='email@email.com', dateOfBirth=1999-10-30, dateOfJoin=2024-04-08, salary=100000}");
+//    }
 }

@@ -9,15 +9,7 @@ import java.util.logging.Logger;
 
 public class EmployeeParser {
 
-    private static final Logger LOGGER = Logger.getLogger(ConvertEmployeeToArray.class.getName());
-
-    static {
-        try {
-            EmployeeLogger.configureLogger(LOGGER);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately
-        }
-    }
+    private static final Logger LOGGER = Logger.getLogger(EmployeeParser.class.getName());
 
     public static Employee parseEmployeeRecord(String employeeRecord, DateTimeFormatter formatter) {
         String[] parts = employeeRecord.split(",");

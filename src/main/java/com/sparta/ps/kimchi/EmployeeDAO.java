@@ -9,21 +9,20 @@ public class EmployeeDAO {
 
     static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
     private static ArrayList<Employee> employees;
+    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+
     private static ArrayList<Employee> employeesByAge;
     private static ArrayList<Employee> employeesByJoinDate;
     private static ArrayList<Employee> employeesBySalary;
-    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+
 
     private static int numOfEmployees;
 
-    private static EmployeeDAO employeeDAO;
+    private EmployeeDAO() throws IOException {}
 
-    private EmployeeDAO(ArrayList<Employee> employees) throws IOException{}
-
-    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees) throws IOException {
+    public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
         employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
         numOfEmployees = employees.size();
-        EmployeeLogger.configureLogger(LOGGER);
 
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
@@ -32,11 +31,6 @@ public class EmployeeDAO {
         for(Employee employee : employees){
             employeeID.put(employee.empID(), employee);
         }
-
-    }
-
-    public static EmployeeDAO getEmployeeDAO(){
-        return employeeDAO;
     }
 
     public static ArrayList<Employee> getEmployees() {
@@ -63,15 +57,17 @@ public class EmployeeDAO {
         return numOfEmployees;
     }
 
-    public static void addEmployee(Employee employee){
+    public static void createEmployee(Employee employee){
         employees.add(employee);
         employeeID.put(employee.empID(), employee);
 
         employeesByAge.add(employee);
         employeesByJoinDate.add(employee);
+        employeesBySalary.add(employee);
 
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
+        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
         LOGGER.info("Employee added: " + employee);
     }
 
@@ -83,6 +79,10 @@ public class EmployeeDAO {
     public static void deleteEmployee(Employee employee){
         employees.remove(employee);
         employeeID.remove(employee.empID());
+        
+        employeesByAge.remove(employee);
+        employeesByJoinDate.remove(employee);
+        employeesBySalary.remove(employee);
         LOGGER.info("Employee deleted: " + employee);
     }
 

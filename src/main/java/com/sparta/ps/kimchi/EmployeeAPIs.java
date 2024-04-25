@@ -2,20 +2,50 @@ package com.sparta.ps.kimchi;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
 import static com.sparta.ps.kimchi.EmployeeDAO.*;
+import static com.sparta.ps.kimchi.EmployeeParser.parseEmployeeRecord;
 
 public class EmployeeAPIs {
-    private static EmployeeDAO employeeDAO;
-    static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
+
+    static final Logger LOGGER = Logger.getLogger(EmployeeAPIs.class.getName());
 
     public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
         employeeDAOSetUp(employees);
         EmployeeLogger.configureLogger(LOGGER);
+    }
+
+    public void addEmployee(String employee){
+        createEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+    }
+
+    public void addEmployee(Employee employee){
+        createEmployee(employee);
+    }
+
+    public void addEmployee(ArrayList<Employee> employees){
+        for(Employee employee : employees){
+            createEmployee(employee);
+        }
+    }
+
+    public void removeEmployee(String employee){
+        deleteEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+    }
+
+    public void removeEmployee(Employee employee){
+        deleteEmployee(employee);
+    }
+
+    public void removeEmployee(ArrayList<Employee> employees){
+        for(Employee employee : employees){
+            deleteEmployee(employee);
+        }
     }
 
 
@@ -44,7 +74,7 @@ public class EmployeeAPIs {
         int index = getIndex(getEmployeesByJoinDate(),dummyEmployee, Comparator.comparing(Employee::dateOfJoin));
 
         // If multiple employee have same join date, find first instance of it
-        while(index > 0 &&  getEmployeesByJoinDate().get(index - 1).dateOfJoin().isEqual(start)){
+        while(index > 0 &&  getEmployeesByJoinDate().get(index-1).dateOfJoin().isEqual(start)){
             index--;
         }
 
@@ -113,6 +143,6 @@ public class EmployeeAPIs {
 
     private int getIndex(ArrayList<Employee> employees, Employee dummyEmployee, Comparator<Employee> comparator){
         int index = Collections.binarySearch(employees, dummyEmployee, comparator);
-        return (index < 0) ? index : -(index + 1);
+        return (index > 0) ? index : -(index + 1);
     }
 }
