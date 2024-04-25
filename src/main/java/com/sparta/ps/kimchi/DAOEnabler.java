@@ -10,7 +10,11 @@ public interface DAOEnabler {
 
     ArrayList<Employee> getEmployeesHiredWithinDateRange(LocalDate start, LocalDate end);
 
+    ArrayList<Employee> getEmployeesHiredDate(LocalDate start);
+
     ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end);
+
+    ArrayList<Employee>  getEmployeesWithAge(int start);
 
     ArrayList<Employee> getEmployeesWithinSalaryRange(int start, int end);
 
