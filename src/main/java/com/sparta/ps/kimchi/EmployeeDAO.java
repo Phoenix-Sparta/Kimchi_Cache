@@ -9,10 +9,12 @@ public class EmployeeDAO {
 
     static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
     private static ArrayList<Employee> employees;
+    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+
     private static ArrayList<Employee> employeesByAge;
     private static ArrayList<Employee> employeesByJoinDate;
     private static ArrayList<Employee> employeesBySalary;
-    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+
 
     private static int numOfEmployees;
 
@@ -57,7 +59,7 @@ public class EmployeeDAO {
         return numOfEmployees;
     }
 
-    public static void addEmployee(Employee employee){
+    public static void createEmployee(Employee employee){
         employees.add(employee);
         employeeID.put(employee.empID(), employee);
 
