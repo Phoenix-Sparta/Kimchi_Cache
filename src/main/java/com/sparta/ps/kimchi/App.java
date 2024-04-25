@@ -27,11 +27,11 @@ import static com.sparta.ps.kimchi.EmployeeDTO.*;
 public class App {
     private static Employee employee;
     public static void main(String[] args) throws IOException {
-        ArrayList<Employee> employees = convertEmployeesToArray(10);
+        ArrayList<Employee> employees = convertEmployeesToArray(100);
         EmployeeDAO employeeDAO = new EmployeeDAO(employees);
 
         //employeeDAO.getEmployeeByLastNamePartial("an");
-        employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2015,1,1), LocalDate.of(2018,1,1));
+        //employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2015,1,1), LocalDate.of(2018,1,1));
 
     }
 }

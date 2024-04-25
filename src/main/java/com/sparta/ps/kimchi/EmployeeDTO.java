@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 public class EmployeeDTO {
 
     static final Logger LOGGER = Logger.getLogger(EmployeeDTO.class.getName());
-    private static ArrayList<Employee> employees = new ArrayList<>();
-    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+    private static final ArrayList<Employee> employees = new ArrayList<>();
+    private static final Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
-    private static ArrayList<Employee> employeesByAge= new ArrayList<>();
-    private static ArrayList<Employee> employeesByJoinDate= new ArrayList<>();
-    private static ArrayList<Employee> employeesBySalary= new ArrayList<>();
+    private static final ArrayList<Employee> employeesByAge= new ArrayList<>();
+    private static final ArrayList<Employee> employeesByJoinDate= new ArrayList<>();
+    private static final ArrayList<Employee> employeesBySalary= new ArrayList<>();
 
 
     private static int numOfEmployees;
