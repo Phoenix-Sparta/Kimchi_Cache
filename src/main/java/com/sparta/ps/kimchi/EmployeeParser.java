@@ -26,7 +26,7 @@ public class EmployeeParser {
                 Integer.parseInt(parts[9]),                  // salary
                 Period.between(LocalDate.parse(parts[7], formatter), LocalDate.now()).getYears() // Age
         );
-        LOGGER.info("Employee parsed: " + employee);
+        LOGGER.config("Employee parsed: " + employee);
         return employee;
     }
 }

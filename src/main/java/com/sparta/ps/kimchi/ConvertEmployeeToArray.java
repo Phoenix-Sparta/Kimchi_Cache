@@ -16,10 +16,11 @@ public class ConvertEmployeeToArray {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         ArrayList<Employee> employees = new ArrayList<>();
 
+        LOGGER.info("Starting to convert employees from string to objects");
         for (String employeeRecord : employeeRecords) {
             Employee employee = EmployeeParser.parseEmployeeRecord(employeeRecord, formatter);
             employees.add(employee);
-            LOGGER.info("Employee converted: " + employee);
+            LOGGER.fine("Employee converted: " + employee);
         }
 
         return employees;

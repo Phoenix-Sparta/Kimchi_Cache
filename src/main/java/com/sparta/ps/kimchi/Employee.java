@@ -6,18 +6,15 @@ public record Employee(int empID, String prefix, String firstName, char middleIn
                        char gender, String email, LocalDate dateOfBirth, LocalDate dateOfJoin, int salary, int age) {
 
     @Override
-    public String toString() {
-        return "Employee{" +
-                "empID=" + empID + '\'' +
-                ", prefix=" + prefix +
-                ", firstName='" + firstName + '\'' +
-                ", middleInitial=" + middleInitial +
-                ", lastName='" + lastName + '\'' +
-                ", gender=" + gender +
-                ", email='" + email + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", dateOfJoin=" + dateOfJoin +
-                ", salary=" + salary +
-                '}';
+    public String toString(){
+        return  "\n" +
+                "_______________________________________" + "\n" +
+                "Employee ID: " +empID + "\n" +
+                "Name: " + firstName + " " + middleInitial + " " + lastName + "\n" +
+                "Gender: " + gender + "\n" +
+                "Email: " + email + "\n" +
+                "Date of Birth: " + dateOfBirth + "\n" +
+                "Date of Join: " + dateOfJoin + "\n" +
+                "Salary: " + salary + "\n";
     }
 }

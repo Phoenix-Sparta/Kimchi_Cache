@@ -22,49 +22,59 @@ public class EmployeeDAO implements DAOEnabler {
 
     public void addEmployee(String employee){
         createEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+        LOGGER.info("Added Employee " + employee);
     }
 
     public void addEmployee(Employee employee){
         createEmployee(employee);
+        LOGGER.info("Added Employee " + employee);
     }
 
     public void addEmployee(ArrayList<Employee> employees){
+        LOGGER.info("Adding employees");
         for(Employee employee : employees){
             createEmployee(employee);
+            LOGGER.fine("Added Employee " + employee);
         }
     }
 
     public void removeEmployee(String employee){
         deleteEmployee(parseEmployeeRecord(employee, DateTimeFormatter.ofPattern("M/d/yyyy")));
+        LOGGER.info("Deleted employee " + employee);
     }
 
     public void removeEmployee(Employee employee){
         deleteEmployee(employee);
+        LOGGER.info("Deleted employee " + employee);
     }
 
     public void removeEmployee(ArrayList<Employee> employees){
+        LOGGER.info("Deleting employees");
         for(Employee employee : employees){
             deleteEmployee(employee);
+            LOGGER.fine("Deleted employee " + employee);
         }
     }
 
-
     public Employee getEmployeeByID(int id){
+        LOGGER.info("Getting employee with ID " + id);
         return getEmployeeID().getOrDefault(id, null);
     }
 
     public ArrayList<Employee> getEmployeeByLastNamePartial(String lastName){
+        LOGGER.info("Finding employee with last name that contains " + lastName);
         ArrayList<Employee> matches = new ArrayList<>();
         for(Employee employee : getEmployees()){
             if(employee.lastName().contains(lastName)){
+                LOGGER.fine("Match found");
                 matches.add(employee);
             }
         }
-        LOGGER.info("Employees found by last name partial '" + lastName + "': " + matches);
         return matches;
     }
 
     public ArrayList<Employee> getEmployeesHiredWithinDateRange(LocalDate start, LocalDate end){
+        LOGGER.info("Getting employees who was hired within " + start + " and " + end);
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start date
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
@@ -80,6 +90,7 @@ public class EmployeeDAO implements DAOEnabler {
 
         while(index < getNumOfEmployees() && (getEmployeesByJoinDate().get(index).dateOfJoin().isBefore(end)
                 || getEmployeesByJoinDate().get(index).dateOfJoin().isEqual(end))){
+            LOGGER.fine("Match found");
             matches.add(getEmployeesByJoinDate().get(index));
             index++;
         }
@@ -89,6 +100,7 @@ public class EmployeeDAO implements DAOEnabler {
     }
 
     public ArrayList<Employee> getEmployeesHiredDate(LocalDate start){
+        LOGGER.info("Getting employees who was hired on " + start);
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start date
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
@@ -108,6 +120,7 @@ public class EmployeeDAO implements DAOEnabler {
         }
 
         while(index < getNumOfEmployees() && (getEmployeesByJoinDate().get(index).dateOfJoin().isEqual(start))){
+            LOGGER.fine("Match found");
             matches.add(getEmployeesByJoinDate().get(index));
             index++;
         }
@@ -118,6 +131,7 @@ public class EmployeeDAO implements DAOEnabler {
 
 
     public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){
+        LOGGER.info("Getting employees with age range " + start + " and " + end);
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start age
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
@@ -133,6 +147,7 @@ public class EmployeeDAO implements DAOEnabler {
         }
 
         while(index < getNumOfEmployees() && getEmployeesByAge().get(index).age() <= end){
+            LOGGER.fine("Match found");
             matches.add(getEmployeesByAge().get(index));
             index++;
         }
@@ -141,6 +156,7 @@ public class EmployeeDAO implements DAOEnabler {
     }
 
     public ArrayList<Employee> getEmployeesWithAge(int start){
+        LOGGER.info("Getting employees with age " + start);
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start age
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
@@ -161,6 +177,7 @@ public class EmployeeDAO implements DAOEnabler {
         }
 
         while(index < getNumOfEmployees() && getEmployeesByAge().get(index).age() == start){
+            LOGGER.fine("Match found");
             matches.add(getEmployeesByAge().get(index));
             index++;
         }
@@ -169,6 +186,7 @@ public class EmployeeDAO implements DAOEnabler {
     }
 
     public ArrayList<Employee> getEmployeesWithinSalaryRange(int start, int end){
+        LOGGER.info("Getting employee with salary range " + start + " and " + end);
         ArrayList<Employee> matches = new ArrayList<>();
         // Create dummy employee with start salary
         Employee dummyEmployee = new Employee(1, "Mr", "Foo", 'B',
@@ -182,16 +200,20 @@ public class EmployeeDAO implements DAOEnabler {
         }
 
         while(index < getNumOfEmployees() && getEmployeesBySalary().get(index).salary() <= end){
+            LOGGER.fine("Match found");
             matches.add(getEmployeesBySalary().get(index));
             index++;
         }
+        LOGGER.info("Employees with age [" + start + " " + end + " ]: " + matches);
         return matches;
     }
 
     public ArrayList<Employee> getEmployeeByGender(char gender){
+        LOGGER.info("Getting employees by the gender " + gender);
         ArrayList<Employee> matches = new ArrayList<>();
         for(Employee employee : getEmployees()){
             if(employee.gender() == gender){
+                LOGGER.fine("Match found");
                 matches.add(employee);
             }
         }

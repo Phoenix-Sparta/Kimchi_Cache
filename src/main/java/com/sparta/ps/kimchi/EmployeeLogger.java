@@ -13,7 +13,7 @@ public class EmployeeLogger {
         ConsoleHandler consoleHandler = new ConsoleHandler();
         FileHandler fileHandler = new FileHandler("src/main/resources/logFile.log");
 
-        consoleHandler.setLevel(Level.ALL);
+        consoleHandler.setLevel(Level.INFO);
         consoleHandler.setFormatter(new CustomFormatter());
 
         fileHandler.setLevel(Level.ALL);
