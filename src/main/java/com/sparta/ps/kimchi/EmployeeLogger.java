@@ -17,6 +17,7 @@ public class EmployeeLogger {
         consoleHandler.setFormatter(new CustomFormatter());
 
         fileHandler.setLevel(Level.ALL);
+        fileHandler.setFormatter(new CustomFormatter());
 
         LOGGER.addHandler(consoleHandler);
         LOGGER.addHandler(fileHandler);

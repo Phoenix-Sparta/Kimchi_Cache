@@ -45,6 +45,7 @@ public class EmployeeDAO implements DAOEnabler {
                 matches.add(employee);
             }
         }
+        LOGGER.info("All employee with last name which contains " + lastName + "\n" + matches);
         return matches;
     }
 
@@ -219,12 +220,12 @@ public class EmployeeDAO implements DAOEnabler {
 
     /**
      * Returns all employee whose gender is gender
-     * Only accepts char, ensure single quotation marks are used ''
+     * Only accepts char, ensure single quotation marks are used ' '
      * @param gender 'M' for male 'F' for female
      * @return ArrayList of all employee whose gender is gender
      */
     public ArrayList<Employee> getEmployeeByGender(char gender){
-        LOGGER.info("Getting employees by the gender " + gender);
+        LOGGER.info("Getting employees with the gender " + gender);
         ArrayList<Employee> matches = new ArrayList<>();
         for(Employee employee : getEmployees()){
             if(employee.gender() == gender){
@@ -232,6 +233,7 @@ public class EmployeeDAO implements DAOEnabler {
                 matches.add(employee);
             }
         }
+        LOGGER.info("All employee with gender " + gender + "\n" + matches);
         return matches;
     }
 
