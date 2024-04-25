@@ -1,37 +1,35 @@
 package com.sparta.ps.kimchi;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class ConvertEmployeeToArray {
 
+    private static final Logger LOGGER = Logger.getLogger(ConvertEmployeeToArray.class.getName());
+
+    static {
+        try {
+            EmployeeLogger.configureLogger(LOGGER);
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+    }
+
     public static ArrayList<Employee> convertEmployeesToArray(int i) {
         String[] employeeRecords = EmployeeFactory.getEmployees(i);
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
-
         ArrayList<Employee> employees = new ArrayList<>();
 
-        // Parse each string and create an Employee record
         for (String employeeRecord : employeeRecords) {
-            String[] parts = employeeRecord.split(","); // Assuming CSV fields are separated by comma
-            Employee employee = new Employee(
-                    Integer.parseInt(parts[0]),                  // empID
-                    parts[1],                                    // prefix
-                    parts[2],                                    // firstName
-                    parts[3].charAt(0),                          // middleInitial
-                    parts[4],                                    // lastName
-                    parts[5].charAt(0),                          // gender
-                    parts[6],                                    // email
-                    LocalDate.parse(parts[7], formatter),        // dateOfBirth
-                    LocalDate.parse(parts[8], formatter),        // dateOfJoin
-                    Integer.parseInt(parts[9]),                  // salary
-                    Period.between(LocalDate.parse(parts[7], formatter), LocalDate.now()).getYears() // Age
-            );
+            Employee employee = EmployeeParser.parseEmployeeRecord(employeeRecord, formatter);
             employees.add(employee);
+            LOGGER.info("Employee converted: " + employee);
         }
+
         return employees;
     }
 
