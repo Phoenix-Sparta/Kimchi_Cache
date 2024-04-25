@@ -1,9 +1,6 @@
 package com.sparta.ps.kimchi;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,24 +8,25 @@ import java.util.List;
 
 
 public class EmployeeFactoryTest {
+private static EmployeeDAO employeeDAO;
+private static Employee employee;
+private static Employee employee2;
 
-//    @BeforeAll
-//    public static void beforeTests() {
-//        Employee employee = new Employee(123, 'm', "Patrick", 'M',
-//                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-//                LocalDate.of(2024, 4, 8), 100000);
-//    }
-
+    @BeforeAll
+    public static void beforeTests() {
+        employee = new Employee(123, "mr", "Patrick", 'M',
+                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), 100000, 24);
+        employee2 = new Employee(1123, "mr", "Patrick", 'M',
+                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), 100000, 24);
+        employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
+    }
 
     @Test
     @DisplayName("Test that employee ID returns correct result")
     void testThatEmployeeIdReturnsCorrectResult() {
         // Arrange
-        Employee employee = new Employee(123, "mr", "Patrick", 'M',
-                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-                LocalDate.of(2024, 4, 8), 100000, 24);
-        EmployeeDAO employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
-
         // Act
         Employee retrievedEmployee = employeeDAO.getEmployeeByID(123);
 
@@ -42,10 +40,7 @@ public class EmployeeFactoryTest {
     @DisplayName("Test that the employee last name works")
     void testThatTheEmployeeLastNameWorks() {
         // Arrange
-        Employee employee = new Employee(123, "mr", "Patrick", 'M',
-                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-                LocalDate.of(2024, 4, 8), 100000, 24);
-        EmployeeDAO employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
+
         // Act
         List<Employee> retrievedEmployee = employeeDAO.getEmployeeByLastNamePartial("Ward");
         List<Employee> retrievedEmployee2 = employeeDAO.getEmployeeByLastNamePartial("ard");
@@ -53,5 +48,46 @@ public class EmployeeFactoryTest {
         Assertions.assertEquals(employee.lastName(), retrievedEmployee.get(0).lastName(), "Retried employee should match original employee");
         Assertions.assertEquals(employee.lastName(), retrievedEmployee2.get(0).lastName(), "Retried employee should match original employee");
 
+    }
+
+    @Test
+    @DisplayName("Test that the date range search works correctly")
+    void testThatTheDateRangeSearchWorksCorrectly() {
+        // Arrange
+
+        // Act
+        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
+        ArrayList<Employee> expectedEmployees = new ArrayList<>();
+        expectedEmployees.add(employee);
+        // Assert
+        Assertions.assertEquals(expectedEmployees.size(), retrievedEmployee.size(), "Number of retrieved employees should match the expected number of employees");
+        Assertions.assertTrue(retrievedEmployee.containsAll(expectedEmployees), "Retrieved employees should match the expected employees");
+
+    }
+
+    @Test
+    @DisplayName("Check that the remove function works")
+    void checkThatTheRemoveFunctionWorks() {
+        // Arrange
+
+        // Act
+        employeeDAO.deleteEmployee(employee2);
+        Employee retrievedEmployee = employeeDAO.getEmployeeByID(1123);
+
+        // Assert
+        Assertions.assertNull(retrievedEmployee, "Employee should not be found after deletion");
+
+    }
+
+    @Test
+    @DisplayName("Test the read method")
+    void testTheReadMethod() {
+        // Arrange
+
+        // Act
+        String retrievedEmployeeString = employeeDAO.readEmployee(123);
+
+        // Assert
+        Assertions.assertEquals(retrievedEmployeeString, "Employee{empID=123', prefix=mr, firstName='Patrick', middleInitial=M, lastName='Ward', gender=m, email='email@email.com', dateOfBirth=1999-10-30, dateOfJoin=2024-04-08, salary=100000}");
     }
 }
