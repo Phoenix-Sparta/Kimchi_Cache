@@ -18,9 +18,7 @@ public class EmployeeDAO {
 
     private static int numOfEmployees;
 
-    private EmployeeDAO() throws IOException {
-        EmployeeLogger.configureLogger(LOGGER);
-    }
+    private EmployeeDAO() throws IOException {}
 
     public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
         employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;

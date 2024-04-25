@@ -74,7 +74,7 @@ public class EmployeeAPIs {
         int index = getIndex(getEmployeesByJoinDate(),dummyEmployee, Comparator.comparing(Employee::dateOfJoin));
 
         // If multiple employee have same join date, find first instance of it
-        while(index > 0 &&  getEmployeesByJoinDate().get(index - 1).dateOfJoin().isEqual(start)){
+        while(index > 0 &&  getEmployeesByJoinDate().get(index-1).dateOfJoin().isEqual(start)){
             index--;
         }
 
@@ -86,6 +86,11 @@ public class EmployeeAPIs {
 
         LOGGER.info("Employees hired within date range [" + start + ", " + end + "]: " + matches);
         return matches;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ArrayList<Employee> employees = new ArrayList<>();
+        EmployeeAPIs employeeAPIs = new EmployeeAPIs(employees);
     }
 
     public ArrayList<Employee> getEmployeesWithinAgeRange(int start, int end){

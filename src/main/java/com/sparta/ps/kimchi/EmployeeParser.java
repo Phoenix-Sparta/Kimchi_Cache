@@ -11,14 +11,6 @@ public class EmployeeParser {
 
     private static final Logger LOGGER = Logger.getLogger(ConvertEmployeeToArray.class.getName());
 
-    static {
-        try {
-            EmployeeLogger.configureLogger(LOGGER);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately
-        }
-    }
-
     public static Employee parseEmployeeRecord(String employeeRecord, DateTimeFormatter formatter) {
         String[] parts = employeeRecord.split(",");
         Employee employee = new Employee(
