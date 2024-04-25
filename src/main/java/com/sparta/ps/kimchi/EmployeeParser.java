@@ -21,6 +21,11 @@ public class EmployeeParser {
 
     public static Employee parseEmployeeRecord(String employeeRecord, DateTimeFormatter formatter) {
         String[] parts = employeeRecord.split(",");
+        if (parts.length < 10) {
+            LOGGER.warning("Invalid employee record: Insufficient data");
+            return null; // or throw an exception as per your requirement
+        }
+
         Employee employee = new Employee(
                 Integer.parseInt(parts[0]),                  // empID
                 parts[1],                                    // prefix

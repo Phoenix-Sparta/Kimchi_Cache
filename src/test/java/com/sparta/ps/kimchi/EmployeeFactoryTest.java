@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public class EmployeeFactoryTest {
-    private static EmployeeDAO employeeDAO;
+    private static EmployeeDTO employeeDTO;
     private static Employee employee;
     private static Employee employee2;
 
@@ -20,7 +20,7 @@ public class EmployeeFactoryTest {
         employee2 = new Employee(1123, "mr", "Patrick", 'M',
                 "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 24);
-        employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
+        employeeDTO = new EmployeeDTO(new ArrayList<>(List.of(employee)));
     }
 
     @Test
@@ -28,7 +28,7 @@ public class EmployeeFactoryTest {
     void testThatEmployeeIdReturnsCorrectResult() {
         // Arrange
         // Act
-        Employee retrievedEmployee = employeeDAO.getEmployeeByID(123);
+        Employee retrievedEmployee = employeeDTO.getEmployeeByID(123);
 
         // Assert
         Assertions.assertEquals(employee.empID(), retrievedEmployee.empID(), "Retrieved employee should match the original employee");
@@ -42,8 +42,8 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        List<Employee> retrievedEmployee = employeeDAO.getEmployeeByLastNamePartial("Ward");
-        List<Employee> retrievedEmployee2 = employeeDAO.getEmployeeByLastNamePartial("ard");
+        List<Employee> retrievedEmployee = employeeDTO.getEmployeeByLastNamePartial("Ward");
+        List<Employee> retrievedEmployee2 = employeeDTO.getEmployeeByLastNamePartial("ard");
         // Assert
         Assertions.assertEquals(employee.lastName(), retrievedEmployee.get(0).lastName(), "Retried employee should match original employee");
         Assertions.assertEquals(employee.lastName(), retrievedEmployee2.get(0).lastName(), "Retried employee should match original employee");
@@ -56,7 +56,7 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
+        ArrayList<Employee> retrievedEmployee = employeeDTO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
         ArrayList<Employee> expectedEmployees = new ArrayList<>();
         expectedEmployees.add(employee);
         // Assert
@@ -71,8 +71,8 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        employeeDAO.deleteEmployee(employee2);
-        Employee retrievedEmployee = employeeDAO.getEmployeeByID(1123);
+        employeeDTO.deleteEmployee(employee2);
+        Employee retrievedEmployee = employeeDTO.getEmployeeByID(1123);
 
         // Assert
         Assertions.assertNull(retrievedEmployee, "Employee should not be found after deletion");
@@ -85,7 +85,7 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        String retrievedEmployeeString = employeeDAO.readEmployee(123);
+        String retrievedEmployeeString = employeeDTO.readEmployee(123);
 
         // Assert
         Assertions.assertEquals(retrievedEmployeeString, "Employee{empID=123', prefix=mr, firstName='Patrick', middleInitial=M, lastName='Ward', gender=m, email='email@email.com', dateOfBirth=1999-10-30, dateOfJoin=2024-04-08, salary=100000}");
