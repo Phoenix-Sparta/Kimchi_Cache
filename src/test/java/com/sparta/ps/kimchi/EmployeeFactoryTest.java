@@ -95,6 +95,16 @@ public class EmployeeFactoryTest {
         Assertions.assertTrue(retrievedEmployees.isEmpty());
     }
 
+    @Test
+    @DisplayName("Test that the correct employee is returned from the correct age")
+    void testCorrectAgeReturnsCorrectEmployee() {
+        // Act
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinAgeRange(22, 31);
+
+        // Assert
+        Assertions.assertEquals(employees, retrievedEmployees);
+    }
+
 
     @Test
     @DisplayName("Test that no employees are returned if there are no employees within the salary range")
