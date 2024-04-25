@@ -75,7 +75,7 @@ public class EmployeeDAO implements DAOEnabler {
         }
 
         while(index < getNumOfEmployees() && (getEmployeesByJoinDate().get(index).dateOfJoin().isBefore(endingDate)
-                || getEmployeesByJoinDate().get(index).dateOfJoin().isEqual(endingDate))){
+        )){
             LOGGER.fine("Match found");
             matches.add(getEmployeesByJoinDate().get(index));
             index++;

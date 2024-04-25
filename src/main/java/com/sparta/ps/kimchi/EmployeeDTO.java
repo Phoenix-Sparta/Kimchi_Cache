@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 public class EmployeeDTO {
 
     static final Logger LOGGER = Logger.getLogger(EmployeeDTO.class.getName());
-    private static ArrayList<Employee> employees;
+    private static ArrayList<Employee> employees = new ArrayList<>();
     private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
-    private static ArrayList<Employee> employeesByAge;
-    private static ArrayList<Employee> employeesByJoinDate;
-    private static ArrayList<Employee> employeesBySalary;
+    private static ArrayList<Employee> employeesByAge= new ArrayList<>();
+    private static ArrayList<Employee> employeesByJoinDate= new ArrayList<>();
+    private static ArrayList<Employee> employeesBySalary= new ArrayList<>();
 
 
     private static int numOfEmployees;
@@ -19,8 +19,17 @@ public class EmployeeDTO {
     private EmployeeDTO() throws IOException {}
 
     public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
-        employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
+        for(Employee employee : newEmployees){
+            employees.add(employee);
+            employeesByAge.add(employee);
+            employeesByJoinDate.add(employee);
+            employeesBySalary.add(employee);
+        }
         numOfEmployees = employees.size();
+
+        //employeesByAge.sort((o1,o2) -> o1.age().equal(o2.age()));
+
+        //employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
 
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));

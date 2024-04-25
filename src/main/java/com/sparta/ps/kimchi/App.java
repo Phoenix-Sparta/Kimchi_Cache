@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static com.sparta.ps.kimchi.ConvertEmployeeToArray.convertEmployeesToArray;
+import static com.sparta.ps.kimchi.EmployeeDTO.*;
 
 /**
  * Main class used to interact with the EmployeeDAO object
@@ -26,10 +27,11 @@ import static com.sparta.ps.kimchi.ConvertEmployeeToArray.convertEmployeesToArra
 public class App {
     private static Employee employee;
     public static void main(String[] args) throws IOException {
-        ArrayList<Employee> employees = convertEmployeesToArray(500);
+        ArrayList<Employee> employees = convertEmployeesToArray(10);
         EmployeeDAO employeeDAO = new EmployeeDAO(employees);
 
-        employeeDAO.getEmployeeByLastNamePartial("Sands");
+        //employeeDAO.getEmployeeByLastNamePartial("an");
+        employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2015,1,1), LocalDate.of(2018,1,1));
 
     }
 }
