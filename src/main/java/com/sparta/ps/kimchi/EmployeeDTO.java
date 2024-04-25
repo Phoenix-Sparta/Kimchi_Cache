@@ -55,33 +55,4 @@ public class EmployeeDTO {
         return numOfEmployees;
     }
 
-    public static void createEmployee(Employee employee){
-        employees.add(employee);
-        employeeID.put(employee.empID(), employee);
-
-        employeesByAge.add(employee);
-        employeesByJoinDate.add(employee);
-        employeesBySalary.add(employee);
-
-        employeesByAge.sort(Comparator.comparingInt(Employee::age));
-        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
-        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
-        LOGGER.info("Employee added: " + employee);
-    }
-
-    public static String readEmployee(int id){
-        LOGGER.info("Employee read with ID " + id);
-        return employeeID.get(id).toString();
-    }
-
-    public static void deleteEmployee(Employee employee){
-        employees.remove(employee);
-        employeeID.remove(employee.empID());
-        
-        employeesByAge.remove(employee);
-        employeesByJoinDate.remove(employee);
-        employeesBySalary.remove(employee);
-        LOGGER.info("Employee deleted: " + employee);
-    }
-
 }
