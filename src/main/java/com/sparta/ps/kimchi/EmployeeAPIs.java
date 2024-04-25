@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static com.sparta.ps.kimchi.EmployeeDAO.*;
 
 public class EmployeeAPIs {
-    private static EmployeeDAO employeeDAO;
+
     static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class.getName());
 
     public EmployeeAPIs(ArrayList<Employee> employees) throws IOException {
