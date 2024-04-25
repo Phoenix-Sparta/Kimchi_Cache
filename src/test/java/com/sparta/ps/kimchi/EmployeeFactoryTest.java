@@ -11,17 +11,26 @@ import java.util.List;
 public class EmployeeFactoryTest {
     private static EmployeeDAO employeeDAO;
     private static Employee employee;
-    private static Employee employee2;
+    private static Employee employee1;
+    private static ArrayList<Employee> employees;
 
     @BeforeAll
     public static void beforeTests() throws IOException {
         employee = new Employee(123, "mr", "Patrick", 'M',
-                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+                "Ward", 'M', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 24);
-        employee2 = new Employee(1123, "mr", "Patrick", 'M',
-                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-                LocalDate.of(2024, 4, 8), 100000, 24);
-        employeeDAO = new EmployeeDAO(new ArrayList<>(List.of(employee)));
+      
+        employee1 = new Employee(123, "mr", "Patrick", 'M',
+                "Ward", 'M', "email@email.com", LocalDate.of(1999, 10, 30),
+                LocalDate.of(2024, 4, 8), 100000, 30);
+//      employee2 = new Employee(1123, "mr", "Patrick", 'M',
+//                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
+//                LocalDate.of(2024, 4, 8), 100000, 24);
+        employees = new ArrayList<Employee>();
+        employees.add(employee);
+        employees.add(employee1);
+
+        employeeAPIs = new EmployeeAPIs(employees);
     }
 
     @Test
@@ -57,12 +66,10 @@ public class EmployeeFactoryTest {
         // Arrange
 
         // Act
-        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
-        ArrayList<Employee> expectedEmployees = new ArrayList<>();
-        expectedEmployees.add(employee);
+        ArrayList<Employee> retrievedEmployee = employeeAPIs.getEmployeesHiredWithinDateRange(LocalDate.of(2024, 4, 7 ), LocalDate.of(2024, 4, 9));
         // Assert
-        Assertions.assertEquals(expectedEmployees.size(), retrievedEmployee.size(), "Number of retrieved employees should match the expected number of employees");
-        Assertions.assertTrue(retrievedEmployee.containsAll(expectedEmployees), "Retrieved employees should match the expected employees");
+        Assertions.assertEquals(2, retrievedEmployee.size(), "Number of retrieved employees should match the expected number of employees");
+        Assertions.assertEquals(retrievedEmployee, employees,  "Retrieved employees should match the expected employees");
 
     }
 
@@ -77,29 +84,68 @@ public class EmployeeFactoryTest {
         Assertions.assertTrue(retrievedEmployees.isEmpty());
     }
 
-//    @Test
-//    @DisplayName("Check that the remove function works")
-//    void checkThatTheRemoveFunctionWorks() {
-//        // Arrange
-//
-//        // Act
-//        EmployeeAPIs.deleteEmployee(employee2);
-//        Employee retrievedEmployee = employeeAPIs.getEmployeeByID(1123);
-//
-//        // Assert
-//        Assertions.assertNull(retrievedEmployee, "Employee should not be found after deletion");
-//
-//    }
-//
-//    @Test
-//    @DisplayName("Test the read method")
-//    void testTheReadMethod() {
-//        // Arrange
-//
-//        // Act
-//        String retrievedEmployeeString = employeeAPIs.readEmployee(123);
-//
-//        // Assert
-//        Assertions.assertEquals(retrievedEmployeeString, "Employee{empID=123', prefix=mr, firstName='Patrick', middleInitial=M, lastName='Ward', gender=m, email='email@email.com', dateOfBirth=1999-10-30, dateOfJoin=2024-04-08, salary=100000}");
-//    }
+    @Test
+    @DisplayName("Test that no employees are returned if the start age is greater than the end age")
+    void testStartAgeGreaterThanEndAge() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinAgeRange(35, 25);
+
+        // Assert
+        Assertions.assertTrue(retrievedEmployees.isEmpty());
+    }
+
+
+    @Test
+    @DisplayName("Test that no employees are returned if there are no employees within the salary range")
+    void testNoEmployeesWithinSalaryRange() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(110000, 120000);
+
+        // Assert
+        Assertions.assertTrue(retrievedEmployees.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Test that no employees are returned if the start salary is greater than the end salary")
+    void testStartSalaryGreaterThanEndSalary() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(200000, 90000);
+
+        // Assert
+        Assertions.assertTrue(retrievedEmployees.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Test that the correct employee is returned when given a valid salary range")
+    void testSalaryRangeGivesCorrectEmployee() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeesWithinSalaryRange(50000, 200000);
+
+        // Assert
+        Assertions.assertEquals(2, retrievedEmployees.size());
+
+    }
+
+    @Test
+    @DisplayName("Test that employees with the specified gender are returned")
+    void testEmployeesWithSpecifiedGender() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeeByGender('M');
+
+        // Assert
+        Assertions.assertTrue(retrievedEmployees.contains(employee));
+    }
+
+    @Test
+    @DisplayName("Test that employees with the incorrect gender are not returned")
+    void testEmployeesWithIncorrectGender() {
+        // Act
+        List<Employee> retrievedEmployees = employeeAPIs.getEmployeeByGender('F');
+
+        // Assert
+        Assertions.assertFalse(retrievedEmployees.contains(employee));
+    }
+
+
 }
+
