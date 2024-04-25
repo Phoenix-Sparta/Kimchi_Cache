@@ -8,9 +8,9 @@ import java.util.List;
 
 
 public class EmployeeFactoryTest {
-private static EmployeeDAO employeeDAO;
-private static Employee employee;
-private static Employee employee2;
+    private static EmployeeDAO employeeDAO;
+    private static Employee employee;
+    private static Employee employee2;
 
     @BeforeAll
     public static void beforeTests() {
