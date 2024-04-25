@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class EmployeeFactoryTest {
     private static Employee employee;
     private static Employee employee1;
     private static ArrayList<Employee> employees;
-    private static EmployeeDAO employeeAPIs;
+
 
     @BeforeAll
     public static void beforeTests() throws IOException {
@@ -24,9 +25,8 @@ public class EmployeeFactoryTest {
         employee1 = new Employee(123, "mr", "Patrick", 'M',
                 "Ward", 'M', "email@email.com", LocalDate.of(1999, 10, 30),
                 LocalDate.of(2024, 4, 8), 100000, 30);
-//      employee2 = new Employee(1123, "mr", "Patrick", 'M',
-//                "Ward", 'm', "email@email.com", LocalDate.of(1999, 10, 30),
-//                LocalDate.of(2024, 4, 8), 100000, 24);
+
+
         employees = new ArrayList<Employee>();
         employees.add(employee);
         employees.add(employee1);
@@ -95,6 +95,16 @@ public class EmployeeFactoryTest {
         Assertions.assertTrue(retrievedEmployees.isEmpty());
     }
 
+    @Test
+    @DisplayName("Test that the correct employee is returned from the correct age")
+    void testCorrectAgeReturnsCorrectEmployee() {
+        // Act
+        List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinAgeRange(22, 31);
+
+        // Assert
+        Assertions.assertEquals(employees, retrievedEmployees);
+    }
+
 
     @Test
     @DisplayName("Test that no employees are returned if there are no employees within the salary range")
@@ -147,6 +157,89 @@ public class EmployeeFactoryTest {
         Assertions.assertFalse(retrievedEmployees.contains(employee));
     }
 
+    @Test
+    @DisplayName("Test that employees are correctly converted to an ArrayList")
+    void testConvertEmployeesToArray() {
+        // Arrange
+        Employee notParsedEmployee = new Employee(123, "mr", "John", 'D',
+                "Doe", 'M', "john@example.com", LocalDate.of(1988, 7, 21),
+                LocalDate.of(2016, 9, 25), 100000, 36);
 
+        String employeeRecords = "123,mr,John,D,Doe,M,john@example.com,7/21/1988,9/25/2016,100000";
+
+        Employee paresedEmployee = EmployeeParser.parseEmployeeRecord(employeeRecords, DateTimeFormatter.ofPattern("M/d/yyyy"));
+
+
+        // Assert
+        Assertions.assertEquals(notParsedEmployee, paresedEmployee, "These should be the same");
+    }
+
+    @Test
+    @DisplayName("Check that Covert Employee class functions correctly")
+    void checkThatCovertEmployeeClassFunctionsCorrectly() {
+        // Arrange
+
+        // Act
+        ArrayList<Employee> converted = ConvertEmployeeToArray.convertEmployeesToArray(2);
+        // Assert
+        Assertions.assertEquals(2,converted.size() );
+    }
+
+//    @Test
+//    @DisplayName("Check that the employee add methods are working correctly")
+//    void checkThatTheEmployeeAddMethodsAreWorkingCorrectly() throws IOException {
+//        // Arrange
+//        EmployeeDAO tempEmployeeDAO;
+//        tempEmployeeDAO = new EmployeeDAO(new ArrayList<>());
+//        ArrayList<Employee> tempArrayList = new ArrayList<>();
+//
+//
+//        Employee tempEmp = new Employee(301629, "Mr.","Ruben",'L',"Weissman",'M',"ruben.weissman@gmail.com",
+//                LocalDate.of(1995,12,28), LocalDate.of(2017, 1, 3),48543, 29);
+//        Employee tempEmpArray = new Employee(368234,"Drs.","Gillian",'T',"Winter",'F',"gillian.winter@gmail.com",
+//                LocalDate.of(1960, 1, 17), LocalDate.of(1984, 11, 28),103619, 64);
+//        Employee tempEmpString = new Employee(744723,"Hon.","Bibi",'H',"Paddock",'F',"bibi.paddock@yahoo.co.in",
+//                LocalDate.of(1991, 10, 20), LocalDate.of(2016, 11, 2),87148, 33);
+//
+//        tempArrayList.add(tempEmpArray);
+//
+//        tempEmployeeDAO.addEmployee("744723,Hon.,Bibi,H,Paddock,F,bibi.paddock@yahoo.co.in,10/20/1991,11/02/2016,87148");
+//        tempEmployeeDAO.addEmployee(tempEmp);
+//        tempEmployeeDAO.addEmployee(tempArrayList);
+//        // Act
+//
+//        // Assert
+//        Assertions.assertEquals(tempEmployeeDAO.getEmployeeByID(301629), tempEmp);
+//        Assertions.assertEquals(tempEmployeeDAO.getEmployeeByID(368234), tempArrayList.get(0));
+//        Assertions.assertEquals(tempEmployeeDAO.getEmployeeByID(744723), tempEmpString);
+//
+//    }
+
+//    @Test
+//    @DisplayName("Check that the remove method is working as intended")
+//    void checkThatTheRemoveMethodIsWorkingAsIntended() {
+//
+//        Employee tempEmp = new Employee(301629, "Mr.","Ruben",'L',"Weissman",'M',"ruben.weissman@gmail.com",
+//                LocalDate.of(1995,12,28), LocalDate.of(2017, 1, 3),48543, 29);
+//        Employee tempEmpArray = new Employee(368234,"Drs.","Gillian",'T',"Winter",'F',"gillian.winter@gmail.com",
+//                LocalDate.of(1960, 1, 17), LocalDate.of(1984, 11, 28),103619, 64);
+//        Employee tempEmpString = new Employee(744723,"Hon.","Bibi",'H',"Paddock",'F',"bibi.paddock@yahoo.co.in",
+//                LocalDate.of(1991, 10, 20), LocalDate.of(2016, 11, 2),87148, 33);
+//
+//
+//        // Act
+//        employeeDAO.addEmployee("744723,Hon.,Bibi,H,Paddock,F,bibi.paddock@yahoo.co.in,10/20/1991,11/02/2016,87148");
+//        employeeDAO.addEmployee(tempEmp);
+//        employeeDAO.addEmployee(tempEmpArray);
+//
+//        employeeDAO.removeEmployee("744723,Hon.,Bibi,H,Paddock,F,bibi.paddock@yahoo.co.in,10/20/1991,11/02/2016,87148");
+//        employeeDAO.removeEmployee(tempEmp);
+//        employeeDAO.removeEmployee(tempEmpArray);
+//        // Assert
+//        Assertions.assertEquals(employeeDAO.getEmployeeByID(301629), null);
+//        Assertions.assertEquals(employeeDAO.getEmployeeByID(368234), null);
+//        Assertions.assertEquals(employeeDAO.getEmployeeByID(744723), null);
+//    }
 }
+
 
