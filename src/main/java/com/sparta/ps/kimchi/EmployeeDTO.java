@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 public class EmployeeDTO {
 
     static final Logger LOGGER = Logger.getLogger(EmployeeDTO.class.getName());
-    private static ArrayList<Employee> employees;
-    private static Hashtable<Integer, Employee> employeeID = new Hashtable<>();
+    private static final ArrayList<Employee> employees = new ArrayList<>();
+    private static final Hashtable<Integer, Employee> employeeID = new Hashtable<>();
 
-    private static ArrayList<Employee> employeesByAge;
-    private static ArrayList<Employee> employeesByJoinDate;
-    private static ArrayList<Employee> employeesBySalary;
+    private static final ArrayList<Employee> employeesByAge= new ArrayList<>();
+    private static final ArrayList<Employee> employeesByJoinDate= new ArrayList<>();
+    private static final ArrayList<Employee> employeesBySalary= new ArrayList<>();
 
 
     private static int numOfEmployees;
@@ -19,9 +19,16 @@ public class EmployeeDTO {
     private EmployeeDTO() throws IOException {}
 
     public static void employeeDAOSetUp(ArrayList<Employee> newEmployees){
-        employees = employeesByAge = employeesByJoinDate = employeesBySalary = newEmployees;
-        numOfEmployees = employees.size();
+        // Deep copy each ArrayList
+        for(Employee employee : newEmployees){
+            employees.add(employee);
+            employeesByAge.add(employee);
+            employeesByJoinDate.add(employee);
+            employeesBySalary.add(employee);
+        }
 
+        numOfEmployees = employees.size();
+        // Sort all ArrayLists based on their own comparator
         employeesByAge.sort(Comparator.comparingInt(Employee::age));
         employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
         employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
@@ -53,35 +60,6 @@ public class EmployeeDTO {
 
     public static int getNumOfEmployees() {
         return numOfEmployees;
-    }
-
-    public static void createEmployee(Employee employee){
-        employees.add(employee);
-        employeeID.put(employee.empID(), employee);
-
-        employeesByAge.add(employee);
-        employeesByJoinDate.add(employee);
-        employeesBySalary.add(employee);
-
-        employeesByAge.sort(Comparator.comparingInt(Employee::age));
-        employeesByJoinDate.sort(Comparator.comparing(Employee::dateOfJoin));
-        employeesBySalary.sort(Comparator.comparingInt(Employee::salary));
-        LOGGER.info("Employee added: " + employee);
-    }
-
-    public static String readEmployee(int id){
-        LOGGER.info("Employee read with ID " + id);
-        return employeeID.get(id).toString();
-    }
-
-    public static void deleteEmployee(Employee employee){
-        employees.remove(employee);
-        employeeID.remove(employee.empID());
-        
-        employeesByAge.remove(employee);
-        employeesByJoinDate.remove(employee);
-        employeesBySalary.remove(employee);
-        LOGGER.info("Employee deleted: " + employee);
     }
 
 }
