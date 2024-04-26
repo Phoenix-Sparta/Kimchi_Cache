@@ -111,7 +111,7 @@ Here's how it works:
    ```sh
    git clone https://github.com/Phoenix-Sparta/Kimchi_Cache
    ```
-
+2. Run the program by writing simple lines of code to App.java file
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -122,7 +122,7 @@ Here's how it works:
 - [x] Add API skeleton
 - [x] Add DTO
 - [x] Add DAO
-- [x] 
+- [x] Add search methods
 - [] 
 - [] 
 - [ ]
