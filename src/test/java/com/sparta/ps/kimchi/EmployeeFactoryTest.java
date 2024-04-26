@@ -74,6 +74,18 @@ public class EmployeeFactoryTest {
 
     }
 
+    @Test
+    @DisplayName("Test that getEmployeesHiredDate gets all employees who was hired on that specific date")
+    void testThatGetEmployeesHiredDateGetsAllEmployeesWhoWasHiredOnThatSpecificDate() {
+        // Arrange
+
+        // Act
+        ArrayList<Employee> retrievedEmployee = employeeDAO.getEmployeesHiredDate(LocalDate.of(2024,4,8));
+
+        // Assert
+        Assertions.assertEquals(2, retrievedEmployee.size(), "Number of retrieved employees should match the expected number of employees");
+    }
+
 
     @Test
     @DisplayName("Test that no employees are returned if there are no employees within the age range")
@@ -96,13 +108,27 @@ public class EmployeeFactoryTest {
     }
 
     @Test
-    @DisplayName("Test that the correct employee is returned from the correct age")
-    void testCorrectAgeReturnsCorrectEmployee() {
+    @DisplayName("Test that the correct employee is returned from the correct age range")
+    void testCorrectAgeRangeReturnsCorrectEmployee() {
         // Act
         List<Employee> retrievedEmployees = employeeDAO.getEmployeesWithinAgeRange(22, 31);
 
         // Assert
         Assertions.assertEquals(employees, retrievedEmployees);
+    }
+
+    @Test
+    @DisplayName("Test that the correct employee is returned from correct age")
+    void testThatTheCorrectEmployeeIsReturnedFromCorrectAge() {
+        // Arrange
+
+        // Act
+        ArrayList<Employee> retrievedEmployees = employeeDAO.getEmployeesWithAge(24);
+
+        // Assert
+        Assertions.assertEquals(1,retrievedEmployees.size());
+        Assertions.assertEquals(employee, retrievedEmployees.getFirst());
+
     }
 
 
